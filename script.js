@@ -143,36 +143,44 @@ const displayedPositions = [];
 
 // --- Thay thế hàm getRandomPosition cũ bằng hàm này ---
 
+// --- Thay thế hàm getRandomPosition cũ bằng hàm này ---
+
 function getRandomPosition() {
-    const maxAttempts = 100;
+    const maxAttempts = 150; // Tăng số lần thử tìm chỗ trống
     const isMobile = window.innerWidth <= 768;
     
-    // Mobile cần khoảng cách thưa hơn
-    const minDistance = isMobile ? 12 : 6; 
+    // Mobile cần khoảng cách thưa hơn nữa
+    const minDistance = isMobile ? 10 : 6; 
     
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
-        // Giới hạn tọa độ từ 5% đến 85% để ko bị sát mép màn hình quá
-        const x = Math.random() * 80 + 5; 
-        const y = Math.random() * 80 + 10;
+        // Random vị trí từ 2% đến 90% (tránh sát mép màn hình quá)
+        const x = Math.random() * 88 + 2; 
+        const y = Math.random() * 88 + 5;
         
-        // --- QUAN TRỌNG: Mở rộng vùng cấm ở giữa ---
-        // Nếu là mobile, vùng cấm (Safe Zone) sẽ rộng hơn (40% chiều ngang)
-        // Để chừa chỗ cho câu "Hy vọng năm 2026..."
-        const centerMarginX = isMobile ? 40 : 25; 
-        const centerMarginY = isMobile ? 25 : 15;
+        // === TẠO VÙNG CẤM (SAFE ZONE) ===
+        // Hình chữ nhật bao quanh câu "Hy vọng năm 2026..."
+        // Mobile: Vùng cấm rộng 80% chiều ngang, cao 30% chiều dọc
         
-        const isInCenterX = x > (50 - centerMarginX) && x < (50 + centerMarginX);
-        const isInCenterY = y > (50 - centerMarginY) && y < (50 + centerMarginY);
+        // Tính tâm màn hình là 50
+        // MarginX = 40 nghĩa là cấm từ (50-40)=10 đến (50+40)=90 theo chiều ngang
+        const marginX = isMobile ? 40 : 25; 
+        // MarginY = 15 nghĩa là cấm từ (50-15)=35 đến (50+15)=65 theo chiều dọc
+        const marginY = isMobile ? 12 : 12;
+
+        const isInForbiddenZone = 
+            (x > (50 - marginX) && x < (50 + marginX)) && 
+            (y > (50 - marginY) && y < (50 + marginY));
         
-        if (isInCenterX && isInCenterY) {
-            continue; // Nếu rơi vào giữa thì bỏ qua, tìm chỗ khác
+        if (isInForbiddenZone) {
+            continue; // Nếu rơi vào vùng cấm thì tìm chỗ khác ngay
         }
         
+        // Kiểm tra xem có bị chồng lên chữ khác không
         let tooClose = false;
         for (const pos of displayedPositions) {
-            // Tính khoảng cách với các chữ đã hiện
             const dx = x - pos.x;
-            const dy = (y - pos.y) * (window.innerWidth / window.innerHeight); // Chuẩn hóa tỷ lệ màn hình
+            // Chuẩn hóa tỷ lệ màn hình (vì đt dài hơn rộng)
+            const dy = (y - pos.y) * (window.innerHeight / window.innerWidth); 
             const distance = Math.sqrt(dx*dx + dy*dy);
             
             if (distance < minDistance) {
