@@ -49,23 +49,25 @@ startButton.addEventListener('click', () => {
     }, 500);
 });
 
-// --- 4. LOGIC CHỮ CHÚC MỪNG (Đã sửa theo yêu cầu) ---
+// --- 4. LOGIC CHỮ CHÚC MỪNG ---
 let blessingIndex = 0;
 const container = document.getElementById('blessingContainer');
 const displayedPositions = [];
 
 function getRandomPosition() {
-    const maxAttempts = 200; // Tăng số lần thử để tìm được chỗ nhét chữ
+    // Tăng số lần thử lên cao để cố tìm chỗ trống cuối cùng
+    const maxAttempts = 500; 
     const isMobile = window.innerWidth <= 768;
     
-    // --- ĐIỀU CHỈNH KHOẢNG CÁCH ---
-    // Để nhét được 35 chữ vào mobile, phải giảm khoảng cách xuống thấp (4-5)
-    // Nếu để to quá sẽ không đủ chỗ
-    const minDistance = isMobile ? 4.5 : 6; 
+    // --- QUAN TRỌNG: KHOẢNG CÁCH ---
+    // Để nhét hết 50+ câu vào mobile, khoảng cách phải rất nhỏ (3.0)
+    // Chấp nhận chữ có thể đứng sát sàn sạt nhau
+    const minDistance = isMobile ? 3.0 : 6; 
     
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
-        const x = Math.random() * 90 + 5; 
-        const y = Math.random() * 88 + 6;
+        // Random rộng ra sát mép màn hình (2% - 98%) để tận dụng diện tích
+        const x = Math.random() * 96 + 2; 
+        const y = Math.random() * 90 + 5;
         
         // Vùng cấm hình chữ nhật cho câu "Hy vọng..."
         const marginX = isMobile ? 35 : 25; 
@@ -99,17 +101,20 @@ function getRandomPosition() {
 
 function showBlessing() {
     const isMobile = window.innerWidth <= 768;
-    // --- YÊU CẦU CỦA BẠN: MOBILE 35 CÂU ---
-    const maxItems = isMobile ? 35 : 55; 
+    
+    // --- YÊU CẦU: HIỆN HẾT FULL DANH SÁCH ---
+    const maxItems = blessings.length; 
 
     if (displayedPositions.length < maxItems && blessingIndex < blessings.length) {
         
         const pos = getRandomPosition();
         
-        // Nếu ko tìm được chỗ, thử lại nhanh
+        // Nếu không tìm được chỗ (do màn hình đã kín mít)
         if (!pos) {
+            // Vẫn cố thử thêm vài lần nữa
             blessingIndex++; 
-            setTimeout(showBlessing, 50); // Thử lại rất nhanh
+            // Nếu đã thử quá nhiều mà ko được thì bỏ qua từ này, sang từ sau
+            setTimeout(showBlessing, 10); 
             return;
         }
         
@@ -120,28 +125,36 @@ function showBlessing() {
         blessing.style.left = pos.x + '%';
         blessing.style.top = pos.y + '%';
         
-        // Random màu nhẹ
         const textColors = ['#ffffff', '#fffacd', '#e0ffff', '#ffe4e1'];
         blessing.style.color = textColors[Math.floor(Math.random() * textColors.length)];
 
         container.appendChild(blessing);
         
-        // Nhảy cóc index ngẫu nhiên
-        blessingIndex += Math.floor(Math.random() * 2) + 1; 
+        // Tăng index tuần tự để không bỏ sót từ nào
+        blessingIndex++; 
         
-        // --- YÊU CẦU CỦA BẠN: TỐC ĐỘ BAN ĐẦU ---
-        // Lúc đầu chậm (500ms), sau đó nhanh dần (300ms -> 100ms)
-        const delay = displayedPositions.length < 5 ? 500 : 
-                      displayedPositions.length < 15 ? 300 : 150;
+        // --- TỐC ĐỘ HIỂN THỊ (GIỮ NGUYÊN TỐC ĐỘ CHẬM) ---
+        let delay;
+        if (isMobile) {
+            // Mobile: 5 từ đầu siêu chậm, sau đó vừa phải
+            delay = displayedPositions.length < 5 ? 800 : 
+                    displayedPositions.length < 20 ? 400 : 250;
+        } else {
+            // PC: Nhanh hơn
+            delay = displayedPositions.length < 5 ? 500 : 
+                    displayedPositions.length < 20 ? 300 : 150;
+        }
         
         setTimeout(showBlessing, delay);
     } else {
+        // Hiện hết sạch sành sanh thì bắn pháo hoa
         setTimeout(startFireworks, 500);
     }
 }
 
 function initBlessingPage() {
-    setTimeout(showBlessing, 500);
+    const startDelay = window.innerWidth <= 768 ? 800 : 500;
+    setTimeout(showBlessing, startDelay);
 }
 
 // --- 5. LOGIC PHÁO HOA ---
