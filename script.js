@@ -32,7 +32,8 @@ const blessingPage = document.getElementById('blessingPage');
 
 // --- CẤU HÌNH NHẠC (JS THUẦN) ---
 // Tự tạo object Audio, không cần thẻ HTML
-const audio = new Audio('bgm.mp3'); 
+// Thêm ./ để khẳng định file nằm ngay tại thư mục gốc
+const audio = new Audio('./bgm.mp3');
 audio.loop = true;   // Lặp lại vô tận
 audio.volume = 1.0;  // Âm lượng to nhất
 
