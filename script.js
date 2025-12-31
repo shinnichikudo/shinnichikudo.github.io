@@ -145,6 +145,8 @@ const displayedPositions = [];
 
 // --- Thay thế hàm getRandomPosition cũ bằng hàm này ---
 
+// --- Thay thế hàm getRandomPosition cũ bằng hàm này ---
+
 function getRandomPosition() {
     const maxAttempts = 150; // Tăng số lần thử tìm chỗ trống
     const isMobile = window.innerWidth <= 768;
