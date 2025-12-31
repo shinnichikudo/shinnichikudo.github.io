@@ -335,33 +335,35 @@ body {
 
 /* --- Sửa lại đoạn cuối file style.css --- */
 
+/* --- Thay thế toàn bộ đoạn @media (max-width: 768px) ở cuối file --- */
+
 @media (max-width: 768px) {
     .start-button {
-        width: 200px;
-        height: 200px;
+        width: 180px;
+        height: 180px;
     }
     
     .button-text {
-        font-size: 28px;
+        font-size: 26px;
     }
 
-    /* CHỈNH LẠI CHỮ CHÍNH: Căn giữa tuyệt đối */
+    /* CHỮ CHÍNH: Cho phép xuống dòng và căn giữa chuẩn 100% */
     .main-text {
-        font-size: 20px; /* Giảm size chút cho đỡ bị ngắt dòng */
-        width: 100%;     /* Chiếm hết chiều ngang */
-        left: 0;         /* Bắt đầu từ mép trái */
-        transform: translateY(-50%); /* Chỉ dịch chuyển chiều dọc */
-        text-align: center; /* Căn giữa văn bản */
-        padding: 0 10px;    /* Cách lề 2 bên 1 chút */
-        z-index: 999;       /* Luôn nổi lên trên cùng */
-        text-shadow: 0 2px 4px rgba(0,0,0,0.8); /* Bóng đen đậm để dễ đọc */
+        font-size: 20px; 
+        width: 90%;          /* Chiếm 90% chiều ngang màn hình */
+        left: 50%;           /* Đặt mốc ở giữa */
+        transform: translate(-50%, -50%); /* Căn tâm chuẩn xác */
+        white-space: normal; /* QUAN TRỌNG: Cho phép xuống dòng */
+        line-height: 1.5;    /* Giãn dòng ra cho thoáng */
+        text-align: center;
+        z-index: 999;
     }
     
-    /* CHỈNH LẠI CÁC LỜI CHÚC: Nhỏ lại và thưa hơn */
+    /* CHỮ PHỤ: Nhỏ hơn và mờ hơn để làm nền */
     .blessing {
-        font-size: 11px !important; /* Bé lại để đỡ chiếm chỗ */
-        opacity: 0.9;               /* Hơi mờ tí để tôn chữ chính lên */
-        white-space: nowrap !important; /* Cấm xuống dòng */
-        text-shadow: 1px 1px 2px #000;
+        font-size: 11px !important;
+        opacity: 0.7;        /* Mờ đi chút để không tranh chấp với chữ chính */
+        white-space: nowrap !important;
+        padding: 2px 5px;    /* Thêm khoảng đệm */
     }
 }
