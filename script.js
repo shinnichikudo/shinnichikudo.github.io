@@ -1,4 +1,4 @@
-// --- 1. DANH SÁCH LỜI CHÚC ---
+// --- 1. DANH SÁCH LỜI CHÚC (FULL) ---
 const blessings = [
     "Tiền vào như nước", "Làm ăn phát đạt", "Phú quý dư dả",
     "Thuận buồm xuôi gió", "Vạn sự như ý", "Quan hệ rộng mở",
@@ -49,27 +49,24 @@ startButton.addEventListener('click', () => {
     }, 500);
 });
 
-// --- 4. LOGIC CHỮ CHÚC MỪNG ---
+// --- 4. LOGIC CHỮ CHÚC MỪNG (FIX TRÀN CHỮ) ---
 let blessingIndex = 0;
 const container = document.getElementById('blessingContainer');
 const displayedPositions = [];
 
 function getRandomPosition() {
-    // Tăng số lần thử lên cao để cố tìm chỗ trống cuối cùng
     const maxAttempts = 500; 
     const isMobile = window.innerWidth <= 768;
     
-    // --- QUAN TRỌNG: KHOẢNG CÁCH ---
-    // Để nhét hết 50+ câu vào mobile, khoảng cách phải rất nhỏ (3.0)
-    // Chấp nhận chữ có thể đứng sát sàn sạt nhau
+    // Khoảng cách rất nhỏ để nhét hết chữ
     const minDistance = isMobile ? 3.0 : 6; 
     
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
-        // Random rộng ra sát mép màn hình (2% - 98%) để tận dụng diện tích
-        const x = Math.random() * 96 + 2; 
+        // Random từ 4% đến 96% màn hình
+        const x = Math.random() * 92 + 4; 
         const y = Math.random() * 90 + 5;
         
-        // Vùng cấm hình chữ nhật cho câu "Hy vọng..."
+        // Vùng cấm cho câu chính
         const marginX = isMobile ? 35 : 25; 
         const marginY = isMobile ? 12 : 12;
 
@@ -101,19 +98,14 @@ function getRandomPosition() {
 
 function showBlessing() {
     const isMobile = window.innerWidth <= 768;
-    
-    // --- YÊU CẦU: HIỆN HẾT FULL DANH SÁCH ---
-    const maxItems = blessings.length; 
+    const maxItems = blessings.length; // Hiện FULL danh sách
 
     if (displayedPositions.length < maxItems && blessingIndex < blessings.length) {
         
         const pos = getRandomPosition();
         
-        // Nếu không tìm được chỗ (do màn hình đã kín mít)
         if (!pos) {
-            // Vẫn cố thử thêm vài lần nữa
             blessingIndex++; 
-            // Nếu đã thử quá nhiều mà ko được thì bỏ qua từ này, sang từ sau
             setTimeout(showBlessing, 10); 
             return;
         }
@@ -125,29 +117,43 @@ function showBlessing() {
         blessing.style.left = pos.x + '%';
         blessing.style.top = pos.y + '%';
         
+        // === LOGIC MỚI: XỬ LÝ TRÀN MÉP MÀN HÌNH ===
+        let anchorTransform = 'translate(-50%, -50%)'; // Mặc định căn giữa
+
+        if (isMobile) {
+            if (pos.x < 20) {
+                // Nếu quá sát mép trái (<20%): Neo bên trái
+                anchorTransform = 'translate(0%, -50%)';
+                blessing.style.textAlign = 'left';
+            } else if (pos.x > 80) {
+                // Nếu quá sát mép phải (>80%): Neo bên phải
+                anchorTransform = 'translate(-100%, -50%)';
+                blessing.style.textAlign = 'right';
+            }
+        }
+        // Gán biến này vào CSS để animation sử dụng
+        blessing.style.setProperty('--anchor-transform', anchorTransform);
+        // ==========================================
+
         const textColors = ['#ffffff', '#fffacd', '#e0ffff', '#ffe4e1'];
         blessing.style.color = textColors[Math.floor(Math.random() * textColors.length)];
 
         container.appendChild(blessing);
         
-        // Tăng index tuần tự để không bỏ sót từ nào
         blessingIndex++; 
         
-        // --- TỐC ĐỘ HIỂN THỊ (GIỮ NGUYÊN TỐC ĐỘ CHẬM) ---
+        // Tốc độ chậm rãi trên mobile
         let delay;
         if (isMobile) {
-            // Mobile: 5 từ đầu siêu chậm, sau đó vừa phải
             delay = displayedPositions.length < 5 ? 800 : 
                     displayedPositions.length < 20 ? 400 : 250;
         } else {
-            // PC: Nhanh hơn
             delay = displayedPositions.length < 5 ? 500 : 
                     displayedPositions.length < 20 ? 300 : 150;
         }
         
         setTimeout(showBlessing, delay);
     } else {
-        // Hiện hết sạch sành sanh thì bắn pháo hoa
         setTimeout(startFireworks, 500);
     }
 }
@@ -157,7 +163,7 @@ function initBlessingPage() {
     setTimeout(showBlessing, startDelay);
 }
 
-// --- 5. LOGIC PHÁO HOA ---
+// --- 5. LOGIC PHÁO HOA (Giữ nguyên) ---
 class Particle {
     constructor(x, y, color) {
         this.x = x; this.y = y; this.color = color;
