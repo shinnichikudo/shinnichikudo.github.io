@@ -279,26 +279,47 @@ body {
     }
 }
 
+/* Trong file style.css, tìm đến đoạn cuối cùng và SỬA LẠI như sau */
+
+@media (max-width: 768px) {
+    /* ... giữ nguyên các phần chỉnh nút bấm cũ ... */
+    
+    /* THÊM/SỬA phần này: Tối ưu chữ chúc mừng trên mobile */
+    .blessing {
+        font-size: 13px !important; /* Chữ nhỏ lại một chút */
+        white-space: normal;        /* Cho phép xuống dòng nếu câu dài */
+        text-align: center;         /* Canh giữa chữ */
+        max-width: 100px;           /* Giới hạn chiều rộng để chữ tự xuống dòng */
+        line-height: 1.2;           /* Dãn dòng cho dễ đọc */
+    }
+
+    /* Đẩy chữ chính (Hy vọng 2026...) lên cao chút để ko bị bàn phím/tay che */
+    .main-text {
+        font-size: 22px;
+        top: 40%; /* Dời lên trên một chút thay vì 50% */
+    }
+}
+
+/* Màn hình điện thoại nhỏ (iPhone dòng thường/mini) */
 @media (max-width: 480px) {
     .start-button {
-        width: 180px;
-        height: 180px;
+        width: 160px; /* Thu nhỏ nút hơn nữa */
+        height: 160px;
     }
     
     .button-text {
-        font-size: 26px;
+        font-size: 24px;
     }
     
     .start-hint {
         font-size: 12px;
-        margin-top: 30px;
+        margin-top: 20px;
+        padding: 0 20px; /* Thêm lề để chữ ko sát mép màn hình */
+        text-align: center;
     }
     
-    .main-text {
-        font-size: 20px;
-    }
-    
-    .blessing {
-        font-size: 12px;
+    /* Ẩn bớt các hiệu ứng bóng đổ nặng nề để web mượt hơn trên máy yếu */
+    .start-button {
+        box-shadow: 0 0 0 10px rgba(102, 126, 234, 0.1);
     }
 }
