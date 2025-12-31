@@ -141,27 +141,40 @@ let blessingIndex = 0;
 const container = document.getElementById('blessingContainer');
 const displayedPositions = [];
 
+// --- Thay thế hàm getRandomPosition cũ bằng hàm này ---
+
 function getRandomPosition() {
     const maxAttempts = 100;
     const isMobile = window.innerWidth <= 768;
-    const minDistance = isMobile ? 8 : 6; 
+    
+    // Mobile cần khoảng cách thưa hơn
+    const minDistance = isMobile ? 12 : 6; 
     
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
-        const x = Math.random() * 90 + 5;
-        const y = Math.random() * 90 + 5;
+        // Giới hạn tọa độ từ 5% đến 85% để ko bị sát mép màn hình quá
+        const x = Math.random() * 80 + 5; 
+        const y = Math.random() * 80 + 10;
         
-        const centerMarginX = isMobile ? 25 : 20;
-        const centerMarginY = isMobile ? 15 : 12;
+        // --- QUAN TRỌNG: Mở rộng vùng cấm ở giữa ---
+        // Nếu là mobile, vùng cấm (Safe Zone) sẽ rộng hơn (40% chiều ngang)
+        // Để chừa chỗ cho câu "Hy vọng năm 2026..."
+        const centerMarginX = isMobile ? 40 : 25; 
+        const centerMarginY = isMobile ? 25 : 15;
+        
         const isInCenterX = x > (50 - centerMarginX) && x < (50 + centerMarginX);
         const isInCenterY = y > (50 - centerMarginY) && y < (50 + centerMarginY);
         
         if (isInCenterX && isInCenterY) {
-            continue; 
+            continue; // Nếu rơi vào giữa thì bỏ qua, tìm chỗ khác
         }
         
         let tooClose = false;
         for (const pos of displayedPositions) {
-            const distance = Math.sqrt(Math.pow(x - pos.x, 2) + Math.pow(y - pos.y, 2));
+            // Tính khoảng cách với các chữ đã hiện
+            const dx = x - pos.x;
+            const dy = (y - pos.y) * (window.innerWidth / window.innerHeight); // Chuẩn hóa tỷ lệ màn hình
+            const distance = Math.sqrt(dx*dx + dy*dy);
+            
             if (distance < minDistance) {
                 tooClose = true;
                 break;
