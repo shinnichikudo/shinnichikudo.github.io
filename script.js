@@ -1,4 +1,4 @@
-// Danh sách lời chúc
+// --- 1. DANH SÁCH LỜI CHÚC ---
 const blessings = [
     "Tiền vào như nước", "Làm ăn phát đạt", "Phú quý dư dả",
     "Thuận buồm xuôi gió", "Vạn sự như ý", "Quan hệ rộng mở",
@@ -25,27 +25,47 @@ const blessings = [
     "Vui vẻ không lo", "Luôn hoan hỉ", "Sung túc đủ đầy"
 ];
 
-// Sự kiện click nút Bắt đầu
+// --- 2. KHAI BÁO CÁC DOM ELEMENT ---
 const startButton = document.getElementById('startButton');
 const startPage = document.getElementById('startPage');
 const blessingPage = document.getElementById('blessingPage');
 
+// --- CẤU HÌNH NHẠC (JS THUẦN) ---
+// Tự tạo object Audio, không cần thẻ HTML
+const audio = new Audio('bgm.mp3'); 
+audio.loop = true;   // Lặp lại vô tận
+audio.volume = 1.0;  // Âm lượng to nhất
+
+// --- 3. XỬ LÝ SỰ KIỆN CLICK NÚT ---
 startButton.addEventListener('click', () => {
-    // Ẩn trang bắt đầu
+    
+    // === DEBUG & PLAY MUSIC ===
+    console.log("Đang thử phát nhạc...");
+    audio.play()
+        .then(() => {
+            console.log("--> Phát nhạc THÀNH CÔNG!");
+        })
+        .catch((error) => {
+            console.error("--> LỖI PHÁT NHẠC:", error);
+            // Mẹo cho sinh viên: Nếu lỗi này hiện ra, thường là do sai tên file 
+            // hoặc trình duyệt chặn Autoplay (nhưng đã click thì ít khi bị chặn)
+        });
+
+    // Hiệu ứng chuyển cảnh
     startPage.style.opacity = '0';
     
     setTimeout(() => {
         startPage.style.display = 'none';
         blessingPage.classList.add('active');
         
-        // Trì hoãn một chút trước khi bắt đầu animation
         setTimeout(() => {
             initBlessingPage();
         }, 500);
     }, 500);
 });
 
-// Class hạt pháo hoa
+// --- 4. CẤU HÌNH PHÁO HOA & TEXT (GIỮ NGUYÊN) ---
+
 class Particle {
     constructor(x, y, color) {
         this.x = x;
@@ -75,11 +95,10 @@ class Particle {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fill();
-        ctx.restore(); // <--- Bạn bị thiếu dấu ngoặc và toàn bộ phần dưới từ đây
+        ctx.restore();
     }
 }
 
-// Khởi tạo Canvas
 const canvas = document.getElementById('fireworks');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
@@ -87,7 +106,6 @@ canvas.height = window.innerHeight;
 
 let particles = [];
 
-// Tạo pháo hoa
 function createFirework(x, y) {
     const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#ffd93d', '#6bcf7f', '#c792ea', '#ff8b94'];
     const particleCount = 80;
@@ -98,9 +116,7 @@ function createFirework(x, y) {
     }
 }
 
-// Vòng lặp Animation
 function animate() {
-    // Chỉ xóa canvas mờ mờ nếu còn hạt (tạo hiệu ứng đuôi)
     if (particles.length > 0) {
         ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -120,7 +136,6 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-// Hiển thị animation chữ chúc mừng
 let blessingIndex = 0;
 const container = document.getElementById('blessingContainer');
 const displayedPositions = [];
@@ -128,20 +143,19 @@ const displayedPositions = [];
 function getRandomPosition() {
     const maxAttempts = 100;
     const isMobile = window.innerWidth <= 768;
-    const minDistance = isMobile ? 8 : 6; // Khoảng cách tối thiểu
+    const minDistance = isMobile ? 8 : 6; 
     
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
         const x = Math.random() * 90 + 5;
         const y = Math.random() * 90 + 5;
         
-        // Vùng tránh ở trung tâm (để không che chữ chính)
         const centerMarginX = isMobile ? 25 : 20;
         const centerMarginY = isMobile ? 15 : 12;
         const isInCenterX = x > (50 - centerMarginX) && x < (50 + centerMarginX);
         const isInCenterY = y > (50 - centerMarginY) && y < (50 + centerMarginY);
         
         if (isInCenterX && isInCenterY) {
-            continue; // Bỏ qua vùng trung tâm
+            continue; 
         }
         
         let tooClose = false;
@@ -158,8 +172,6 @@ function getRandomPosition() {
             return { x, y };
         }
     }
-    
-    // Nếu không tìm được vị trí, trả về null
     return null;
 }
 
@@ -167,11 +179,9 @@ function showBlessing() {
     if (blessingIndex < blessings.length) {
         const pos = getRandomPosition();
         
-        // Nếu không tìm được chỗ trống, bỏ qua từ này
         if (!pos) {
             blessingIndex++;
-            const delay = blessingIndex < 10 ? 500 : 
-                          blessingIndex < 30 ? 300 : 150;
+            const delay = blessingIndex < 10 ? 500 : blessingIndex < 30 ? 300 : 150;
             setTimeout(showBlessing, delay);
             return;
         }
@@ -186,22 +196,16 @@ function showBlessing() {
         container.appendChild(blessing);
         blessingIndex++;
         
-        // Tốc độ xuất hiện chữ: ban đầu chậm, sau nhanh dần
-        const delay = blessingIndex < 10 ? 500 : 
-                      blessingIndex < 30 ? 300 : 150;
+        const delay = blessingIndex < 10 ? 500 : blessingIndex < 30 ? 300 : 150;
         
         setTimeout(showBlessing, delay);
     } else {
-        // Hết chữ chúc mừng thì bắt đầu bắn pháo hoa
         setTimeout(startFireworks, 500);
     }
 }
 
-// Bắt đầu bắn pháo hoa
 function startFireworks() {
-    // Kích hoạt animation canvas
     animate();
-    
     setInterval(() => {
         const x = Math.random() * canvas.width;
         const y = Math.random() * (canvas.height * 0.6) + canvas.height * 0.2;
@@ -209,13 +213,10 @@ function startFireworks() {
     }, 800);
 }
 
-// Khởi tạo trang chúc mừng
 function initBlessingPage() {
-    // Đợi một chút rồi mới hiện chữ
     setTimeout(showBlessing, 500);
 }
 
-// Chỉnh lại kích thước canvas khi thay đổi cửa sổ
 window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
