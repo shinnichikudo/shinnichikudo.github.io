@@ -333,14 +333,35 @@ body {
     }
 }
 
-@media (max-width: 480px) {
+/* --- Sửa lại đoạn cuối file style.css --- */
+
+@media (max-width: 768px) {
     .start-button {
-        width: 160px;
-        height: 160px;
+        width: 200px;
+        height: 200px;
     }
     
-    .start-hint {
-        font-size: 12px;
-        margin-top: 30px;
+    .button-text {
+        font-size: 28px;
+    }
+
+    /* CHỈNH LẠI CHỮ CHÍNH: Căn giữa tuyệt đối */
+    .main-text {
+        font-size: 20px; /* Giảm size chút cho đỡ bị ngắt dòng */
+        width: 100%;     /* Chiếm hết chiều ngang */
+        left: 0;         /* Bắt đầu từ mép trái */
+        transform: translateY(-50%); /* Chỉ dịch chuyển chiều dọc */
+        text-align: center; /* Căn giữa văn bản */
+        padding: 0 10px;    /* Cách lề 2 bên 1 chút */
+        z-index: 999;       /* Luôn nổi lên trên cùng */
+        text-shadow: 0 2px 4px rgba(0,0,0,0.8); /* Bóng đen đậm để dễ đọc */
+    }
+    
+    /* CHỈNH LẠI CÁC LỜI CHÚC: Nhỏ lại và thưa hơn */
+    .blessing {
+        font-size: 11px !important; /* Bé lại để đỡ chiếm chỗ */
+        opacity: 0.9;               /* Hơi mờ tí để tôn chữ chính lên */
+        white-space: nowrap !important; /* Cấm xuống dòng */
+        text-shadow: 1px 1px 2px #000;
     }
 }
