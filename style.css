@@ -301,25 +301,46 @@ body {
 }
 
 /* Màn hình điện thoại nhỏ (iPhone dòng thường/mini) */
-@media (max-width: 480px) {
+/* --- SỬA ĐOẠN CUỐI CÙNG CỦA STYLE.CSS --- */
+
+@media (max-width: 768px) {
     .start-button {
-        width: 160px; /* Thu nhỏ nút hơn nữa */
-        height: 160px;
+        width: 200px;
+        height: 200px;
     }
     
     .button-text {
-        font-size: 24px;
+        font-size: 28px;
+    }
+
+    /* Chỉnh chữ chính to rõ, thêm bóng để nếu có đè thì vẫn đọc được */
+    .main-text {
+        font-size: 22px;
+        width: 80%; /* Giới hạn chiều rộng */
+        line-height: 1.4;
+        text-shadow: 0 0 10px rgba(0,0,0,0.8); /* Bóng đen giúp chữ nổi bật */
+        z-index: 100; /* Luôn nằm trên cùng */
+    }
+    
+    /* Chỉnh các lời chúc bay bay */
+    .blessing {
+        font-size: 13px !important; /* Chữ nhỏ lại */
+        white-space: normal !important; /* Cho phép xuống dòng */
+        max-width: 90px; /* Giới hạn chiều rộng để ko bị dài ngoằng */
+        text-align: center;
+        line-height: 1.2;
+        text-shadow: 1px 1px 2px #000;
+    }
+}
+
+@media (max-width: 480px) {
+    .start-button {
+        width: 160px;
+        height: 160px;
     }
     
     .start-hint {
         font-size: 12px;
-        margin-top: 20px;
-        padding: 0 20px; /* Thêm lề để chữ ko sát mép màn hình */
-        text-align: center;
-    }
-    
-    /* Ẩn bớt các hiệu ứng bóng đổ nặng nề để web mượt hơn trên máy yếu */
-    .start-button {
-        box-shadow: 0 0 0 10px rgba(102, 126, 234, 0.1);
+        margin-top: 30px;
     }
 }
