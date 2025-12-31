@@ -199,14 +199,24 @@ function getRandomPosition() {
     return null;
 }
 
+// --- Thay thế hàm showBlessing cũ bằng hàm mới này ---
+
 function showBlessing() {
-    if (blessingIndex < blessings.length) {
+    // CẤU HÌNH SỐ LƯỢNG: 
+    // Nếu là điện thoại: chỉ hiện tối đa 18 câu. Máy tính: 50 câu.
+    const isMobile = window.innerWidth <= 768;
+    const maxItems = isMobile ? 18 : 50; 
+
+    // Kiểm tra: Nếu đã hiện đủ số lượng hoặc hết từ vựng thì dừng lại
+    if (displayedPositions.length < maxItems && blessingIndex < blessings.length) {
+        
         const pos = getRandomPosition();
         
         if (!pos) {
-            blessingIndex++;
-            const delay = blessingIndex < 10 ? 500 : blessingIndex < 30 ? 300 : 150;
-            setTimeout(showBlessing, delay);
+            // Nếu không tìm được chỗ trống (do màn hình đầy), bỏ qua và thử lại sau
+            // Nhưng nếu đã thử quá nhiều lần thì thôi, chuyển sang bắn pháo hoa luôn
+            blessingIndex++; 
+            setTimeout(showBlessing, 100);
             return;
         }
         
@@ -217,13 +227,21 @@ function showBlessing() {
         blessing.style.left = pos.x + '%';
         blessing.style.top = pos.y + '%';
         
+        // Random màu sắc nhẹ nhàng cho chữ (trắng, vàng nhạt, xanh nhạt)
+        const textColors = ['#ffffff', '#fffacd', '#e0ffff', '#ffe4e1'];
+        blessing.style.color = textColors[Math.floor(Math.random() * textColors.length)];
+
         container.appendChild(blessing);
-        blessingIndex++;
         
-        const delay = blessingIndex < 10 ? 500 : blessingIndex < 30 ? 300 : 150;
+        // Tăng index ngẫu nhiên để không bị lặp lại thứ tự cũ
+        // (Mẹo: nhảy cóc index để lấy từ ngẫu nhiên trong list)
+        blessingIndex += Math.floor(Math.random() * 2) + 1; 
         
-        setTimeout(showBlessing, delay);
+        // Tốc độ xuất hiện
+        setTimeout(showBlessing, 200);
     } else {
+        // Đã hiện đủ số lượng cần thiết -> Bắn pháo hoa
+        console.log("Đã hiện đủ " + displayedPositions.length + " lời chúc. Bắt đầu pháo hoa!");
         setTimeout(startFireworks, 500);
     }
 }
